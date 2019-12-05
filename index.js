@@ -13,16 +13,20 @@ Object.values(commands).map(v => {
     bot.commands.set(v.name, v);
 });
 
+function is_numeric_same(a, b) {
+    return a.toString() === b.toString();
+}
+
 function check_items() {
     collection('items').find({}).forEach(async (item) => {
         const url = new URL(item.url);
         const checker = checkers.find(handler => handler.validate(url));
         const item_info = await checker.extract(url);
-        if(item_info.price === item.price && item_info.status === item.status) {
+        if(is_numeric_same(item_info.price, item.price) && item_info.status === item.status) {
             return;
         }
         const msg = [`The item "${item.title}" you tracked has changed!`];
-        if(item_info.price !== item.price) {
+        if(!is_numeric_same(item_info.price, item.price)) {
             msg.push(`Price: ${item.price} -> ${item_info.price}`);
         }
         else {
@@ -39,11 +43,6 @@ function check_items() {
             url: item.url
         }).forEach((subscription) => {
             console.log(subscription);
-            bot.users.tap(user => {
-                console.log(user.tag);
-                console.log(subscription.dm_subscriber);
-                console.log(user.tag == subscription.dm_subscriber);
-            });
             const subscriber = bot.users.find(user => user.tag == subscription.dm_subscriber);
             console.log(subscriber);
             if(subscriber) {
