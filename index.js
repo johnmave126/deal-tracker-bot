@@ -49,7 +49,12 @@ function check_items() {
             if(subscriber) {
                 subscriber.send(msg, {split: true});
             }
-        })
+        });
+        collection('items').updateOne({
+            url: item.url
+        }, {
+            $set: item_info
+        });
     }).catch((e) => console.error(e));
 }
 
