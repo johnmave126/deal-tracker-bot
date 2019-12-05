@@ -62,7 +62,7 @@ bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
 
     check_items();
-    schedule('*/30 * * * *', check_items);
+    schedule('1,31 * * * *', check_items);
 });
 
 bot.on('message', msg => {
